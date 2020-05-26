@@ -5,6 +5,8 @@ import { createCommand } from 'commander'
 import { bold } from 'chalk'
 
 import submit from './commands/submit'
+import login from './commands/login'
+import logout from './commands/logout'
 import { URL } from './constants'
 
 const pkg = require('../package.json')
@@ -12,7 +14,7 @@ const program = createCommand()
 updateNotifier({ pkg, updateCheckInterval: 0 }).notify()
 console.clear()
 
-export const init = () => {
+export const init = (): void => {
   // List Options
   program
     .version(
@@ -28,10 +30,22 @@ export const init = () => {
   program
     .command('submit')
     .alias('s')
-    .description('Submits git diff of challenge to c0d3.com')
+    .description('Submit git diff of challenge to c0d3.com')
     .option('--url <url> ', 'Set url endpoint for http request', URL)
     .option('-d, --debug')
     .action(submit)
+
+  program
+    .command('login')
+    .alias('l')
+    .description('Login to your c0d3.com account')
+    .option('--url <url> ', 'Set url endpoint for http request', URL)
+    .action(login)
+
+  program
+    .command('logout')
+    .description('Logout to your c0d3.com account')
+    .action(logout)
 
   program.parse(process.argv)
 

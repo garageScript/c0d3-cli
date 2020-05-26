@@ -1,5 +1,4 @@
-# IDE
- .vscode/
-
-# lib
-node_modules/
+.vscode
+node_modules
+coverage
+dist

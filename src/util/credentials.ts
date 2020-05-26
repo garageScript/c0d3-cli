@@ -7,50 +7,43 @@ import {
   VerifyToken,
   GetToken,
   SaveToken,
-  CreateCredentialsFile
+  CreateCredentialsFile,
 } from '../@types/credentials'
 import { IS_TOKEN_VALID, GET_CLI_TOKEN } from '../graphql'
 import { CREDENTIALS_PATH, HIDDEN_DIR } from '../constants'
-import * as message from '../messages'
+import { WRONG_CREDENTIALS, SAVE_TOKEN_ERROR, NOT_LOGGED_IN } from '../messages'
 
-export const verifyToken: VerifyToken = async url => {
+export const getCredentials: VerifyToken = async (url) => {
   try {
-    if (!fs.existsSync(HIDDEN_DIR)) {
-      await credentials.saveToken('initToken')
-    }
-    let { cliToken }: Token = await require(CREDENTIALS_PATH)
-    const { isTokenValid }: Token = await request(url, IS_TOKEN_VALID, {
-      cliToken
-    })
-    if (!isTokenValid) cliToken = ''
-    return { isTokenValid, cliToken }
-  } catch (error) {
-    throw new Error(error)
+    const { cliToken } = require(CREDENTIALS_PATH)
+    const { isTokenValid } = await request(url, IS_TOKEN_VALID, { cliToken })
+    if (!isTokenValid) throw Error
+
+    return cliToken
+  } catch {
+    throw new Error(NOT_LOGGED_IN)
   }
 }
 
 export const getToken: GetToken = async (credentials, url) => {
-  const { cliToken } = await request<Token>(
-    url,
-    GET_CLI_TOKEN,
-    credentials
-  ).catch(() => {
-    throw new Error(message.WRONG_CREDENTIALS)
-  })
-
-  return cliToken
+  try {
+    const { login } = await request<Token>(url, GET_CLI_TOKEN, credentials)
+    return login.cliToken
+  } catch (error) {
+    throw new Error(WRONG_CREDENTIALS)
+  }
 }
 
-export const saveToken: SaveToken = async cliToken => {
+export const saveToken: SaveToken = async (cliToken) => {
   try {
     credentials.createHiddenDir()
     await credentials.createCredentialsFile(cliToken)
   } catch {
-    throw new Error(message.SAVE_TOKEN_ERROR)
+    throw new Error(SAVE_TOKEN_ERROR)
   }
 }
 
-export const createHiddenDir = () => {
+export const createHiddenDir = (): boolean => {
   if (!fs.existsSync(HIDDEN_DIR)) {
     fs.mkdirSync(HIDDEN_DIR)
     return true
@@ -58,10 +51,12 @@ export const createHiddenDir = () => {
   return false
 }
 
-export const createCredentialsFile: CreateCredentialsFile = async cliToken => {
+export const createCredentialsFile: CreateCredentialsFile = async (
+  cliToken
+) => {
   await fsPromises
     .writeFile(CREDENTIALS_PATH, JSON.stringify({ cliToken }))
-    .catch(err => {
+    .catch((err) => {
       throw new Error(err)
     })
 }

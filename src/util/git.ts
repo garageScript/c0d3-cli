@@ -1,15 +1,16 @@
 import gitP, { SimpleGit } from 'simple-git/promise'
-import * as message from '../messages'
+import { WRONG_BRANCH, CURRENT_BRANCH, NO_DIFFERENCE } from '../messages'
 
 const git: SimpleGit = gitP()
 
-export const getDiffAgainstMaster = async () => {
+export const getDiffAgainstMaster = async (): Promise<string> => {
   const { current } = await git.branch()
-  if (current === 'master') throw new Error(message.WRONG_BRANCH)
-  console.log(`${message.CURRENT_BRANCH} ${current}\n`)
+  if (current === 'master') throw new Error(WRONG_BRANCH)
+  console.log(`${CURRENT_BRANCH} ${current}\n`)
 
   const diff = await git.diff([`--color`, `master..${current}`])
-  if (!!diff) throw new Error(message.NO_DIFFERENCE)
+  const hasDiffFromMaster = !!diff
+  if (!hasDiffFromMaster) throw new Error(NO_DIFFERENCE)
 
   return diff
 }

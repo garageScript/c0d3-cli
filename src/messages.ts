@@ -3,7 +3,7 @@ import { bold } from 'chalk'
 export const CURRENT_BRANCH = bold.magenta('\nYou are currently on branch: ')
 
 export const NO_DIFFERENCE = `There are ${bold.red('no differences ')}
-in your current branch from your master branch.`
+in your current branch from your master branch.\n`
 
 export const DIFF_MSG = bold.magenta(
   '\nDifferences from your current branch to master:\n\n'
@@ -12,7 +12,7 @@ export const DIFF_MSG = bold.magenta(
 export const WRONG_BRANCH = `Submissions must come from branches that are ${bold.red(
   'not master. '
 )}
-Please make sure that you branch, add, commit, and submit correctly.`
+Please make sure that you branch, add, commit, and submit correctly.\n`
 
 export const PROMPT_ORDER = bold.red(`The number needs to be a non-negative integer.
 To cancel submission, press Ctrl + d`)
@@ -28,15 +28,22 @@ export const SAVE_TOKEN_ERROR = bold.red(
 )
 
 export const FAIL_TO_GET_LESSONS = bold.red(
-  'Can not fetch lessons. It might be a network issue. Please try again.'
+  'Can not fetch lessons. It might be a network issue. Please try again.\n'
 )
 
 export const SUBMISSION_ERROR = bold.red(
-  'Your submission was not successfully sent. Please try again.'
+  'Your submission was not successfully sent. Please try again.\n'
 )
 
 export const SUBMISSION_SUCCEED = bold.green(
   `Your submission was successfull!
   You will receive notification in chat when it is reviewed.
-  Thank you!`
+  Thank you!\n`
 )
+
+export const NOT_LOGGED_IN = `${bold.red('You are currently not logged in.')}\n
+Please run ${bold.magenta(
+  'c0d3 login'
+)} to login first, then run ${bold.magenta('c0d3 submit')}.\n`
+
+export const LOGOUT_ERROR = bold.red('The logout has fail.\n')

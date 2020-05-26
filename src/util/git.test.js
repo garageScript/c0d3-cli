@@ -1,5 +1,5 @@
 import { getDiffAgainstMaster } from './git'
-import * as message from '../messages'
+import { WRONG_BRANCH, NO_DIFFERENCE } from '../messages'
 
 jest.mock('simple-git/promise', () =>
   jest.fn(() => {
@@ -23,10 +23,10 @@ describe('getDiffAgainstMaster', () => {
   })
 
   test('Should throw error: WRONG_BRANCH', () => {
-    expect(getDiffAgainstMaster()).rejects.toThrow(message.WRONG_BRANCH)
+    expect(getDiffAgainstMaster()).rejects.toThrow(WRONG_BRANCH)
   })
 
   test('Should throw error: NO_DIFFERENCE', () => {
-    expect(getDiffAgainstMaster()).rejects.toThrow(message.NO_DIFFERENCE)
+    expect(getDiffAgainstMaster()).rejects.toThrow(NO_DIFFERENCE)
   })
 })

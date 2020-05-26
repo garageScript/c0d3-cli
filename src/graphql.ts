@@ -18,8 +18,10 @@ export const IS_TOKEN_VALID = `
   }
 `
 export const GET_CLI_TOKEN = `
-  query cliToken($username: String!, $password: String!) {
-    cliToken(username: $username, password: $password)
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password){
+      cliToken
+    }
   }
 `
 export const POST_SUBMISSION = `

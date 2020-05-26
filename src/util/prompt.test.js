@@ -1,11 +1,13 @@
 import { cyan } from 'chalk'
 import enquirer from 'enquirer'
-import * as message from '../messages'
-import { choices, list, askForChallenges, askCredentials } from './prompt'
+import { PROMPT_ORDER, WRONG_INPUT } from '../messages'
+import { displayBoxUI } from '../util/boxen'
+import { getMapFromOptions, getOptionDisplayStr, askForChallenges, askCredentials } from './prompt'
 
 jest.mock('enquirer')
+jest.mock('../util/boxen')
 
-describe('choices', () => {
+describe('getMapFromOptions', () => {
   test('should create a map object', () => {
     const arr = [
       {
@@ -41,12 +43,12 @@ describe('choices', () => {
         order: 5
       }
     }
-    expect(choices(arr)).toEqual(result)
+    expect(getMapFromOptions(arr)).toEqual(result)
   })
 })
 
-describe('list', () => {
-  test('should create a string of list', () => {
+describe('getOptionDisplayStr', () => {
+  test('should create a string of getOptionDisplayStr', () => {
     const arr = [
       {
         order: 5,
@@ -67,7 +69,7 @@ describe('list', () => {
       'Four'
     )}\n`
 
-    expect(list(arr)).toEqual(result)
+    expect(getOptionDisplayStr(arr)).toEqual(result)
   })
 })
 
@@ -117,9 +119,9 @@ describe('askForChallenges', () => {
     )
     const validChallenge = enquirer.prompt.mock.calls[1][0][0].validate(10)
 
-    expect(invalidLesson).toBe(message.PROMPT_ORDER)
+    expect(invalidLesson).toBe(PROMPT_ORDER)
     expect(validLesson).toBe(true)
-    expect(invalidChallenge).toBe(message.PROMPT_ORDER)
+    expect(invalidChallenge).toBe(PROMPT_ORDER)
     expect(validChallenge).toBe(true)
   })
 })
@@ -134,6 +136,6 @@ describe('askCredentials', () => {
   test('should throw error: WRONG_INPUT', () => {
     const credentials = { username: '', password: '' }
     enquirer.prompt = jest.fn().mockResolvedValue(credentials)
-    expect(askCredentials()).rejects.toThrowError(message.WRONG_INPUT)
+    expect(askCredentials()).rejects.toThrowError(WRONG_INPUT)
   })
 })

@@ -1,13 +1,13 @@
 import fs, { promises as fsPromises } from 'fs'
-import * as message from '../messages'
+import { SAVE_TOKEN_ERROR, WRONG_CREDENTIALS, NOT_LOGGED_IN } from '../messages'
 import * as constants from '../constants'
 import { request } from 'graphql-request'
 import * as credentials from './credentials'
 import {
-  verifyToken,
+  getCredentials,
   getToken,
   createHiddenDir,
-  createCredentialsFile
+  createCredentialsFile,
 } from './credentials'
 
 jest.mock('graphql-request')
@@ -15,10 +15,10 @@ jest.mock('../constants')
 jest.mock('fs', () => {
   return {
     promises: {
-      writeFile: jest.fn()
+      writeFile: jest.fn(),
     },
     existsSync: jest.fn(),
-    mkdirSync: jest.fn()
+    mkdirSync: jest.fn(),
   }
 })
 
@@ -48,36 +48,28 @@ describe('createHiddenDir', () => {
   })
 })
 
-describe('verifyToken', () => {
+describe('getCredentials', () => {
   constants.CREDENTIALS_PATH = './credentials.test.json'
 
   test('should return a valid token', () => {
     request.mockResolvedValue({ isTokenValid: true })
-    expect(verifyToken('fakeUrl')).resolves.toEqual({
-      isTokenValid: true,
-      cliToken: 'fakeCliToken'
-    })
+    expect(getCredentials('fakeUrl')).resolves.toEqual('fakeCliToken')
   })
 
-  test('should not return a valid token', () => {
+  test('should throw error FAIL_VERIFY_TOKEN', () => {
     request.mockResolvedValue({ isTokenValid: false })
-    expect(verifyToken('fakeUrl')).resolves.toEqual({
-      isTokenValid: false,
-      cliToken: ''
-    })
+    expect(getCredentials('fakeUrl')).rejects.toThrowError(NOT_LOGGED_IN)
   })
 
-  test('should throw an error', () => {
-    constants.CREDENTIALS_PATH = './src/util/credentials.test.json'
-    fs.existsSync.mockReturnValue(false)
+  test('should throw error FAIL_VERIFY_TOKEN', () => {
     request.mockRejectedValue()
-    expect(verifyToken('fakeUrl')).rejects.toThrowError()
+    expect(getCredentials('fakeUrl')).rejects.toThrowError(NOT_LOGGED_IN)
   })
 })
 
 describe('getToken', () => {
   test('should return token', () => {
-    request.mockResolvedValue({ cliToken: 'fakeCliToken' })
+    request.mockResolvedValue({ login: { cliToken: 'fakeCliToken' } })
     expect(getToken('fakeCredentials', 'fakeUrl')).resolves.toEqual(
       'fakeCliToken'
     )
@@ -87,7 +79,7 @@ describe('getToken', () => {
     request.mockRejectedValue()
     expect(
       credentials.getToken('fakeCredentials', 'fakeUrl')
-    ).rejects.toThrowError(message.WRONG_CREDENTIALS)
+    ).rejects.toThrowError(WRONG_CREDENTIALS)
   })
 })
 
@@ -128,7 +120,7 @@ describe('saveToken', () => {
     spyCreateHiddenDir.mockReturnValue()
     spyCreateCredentialsFile.mockRejectedValue()
     expect(credentials.saveToken('fakeCliToken')).rejects.toThrowError(
-      message.SAVE_TOKEN_ERROR
+      SAVE_TOKEN_ERROR
     )
   })
 })
