@@ -1,0 +1,5 @@
+# IDE
+ .vscode/
+
+# lib
+node_modules/
