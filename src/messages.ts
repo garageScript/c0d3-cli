@@ -46,4 +46,4 @@ Please run ${bold.magenta(
   'c0d3 login'
 )} to login first, then run ${bold.magenta('c0d3 submit')}.\n`
 
-export const LOGOUT_ERROR = bold.red('The logout has fail.\n')
+export const LOGOUT_ERROR = bold.red('The logout has failed.\n')
