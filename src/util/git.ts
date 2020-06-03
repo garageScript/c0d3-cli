@@ -12,6 +12,7 @@ export const getDiffAgainstMaster = async (): Promise<DiffObject> => {
   const { current } = await git.branch()
   if (current === 'master') throw new Error(WRONG_BRANCH)
   console.log(`${CURRENT_BRANCH} ${current}\n`)
+
   const diff = {
     display: await git.diff([`--color`, `master..${current}`]),
     db: await git.diff([`master..${current}`]),
