@@ -33,7 +33,10 @@ describe('c0d3 submit', () => {
 
   test('Should submit without error', async () => {
     const args = { url: 'fakeURL', debug: false }
-    getDiffAgainstMaster.mockResolvedValue('fakeDiff')
+    getDiffAgainstMaster.mockResolvedValue({
+      db: 'fakeDiff',
+      display: 'fakeDiff',
+    })
     askForChallenges.mockResolvedValue({
       lessonId: 'fakeLessonID',
       challengeId: 'fakeChallengeId',
@@ -43,7 +46,10 @@ describe('c0d3 submit', () => {
 
   test('Should throw error', () => {
     const args = { url: 'fakeURL', debug: false }
-    getDiffAgainstMaster.mockResolvedValue('fakeDiff')
+    getDiffAgainstMaster.mockResolvedValue({
+      db: 'fakeDiff',
+      display: 'fakeDiff',
+    })
     getLessons.mockRejectedValue()
     expect(submit(args)).rejects.toThrowError()
   })
@@ -59,7 +65,10 @@ describe('c0d3 submit', () => {
         diff: 'fakeDiff',
       },
     ]
-    getDiffAgainstMaster.mockResolvedValue('fakeDiff')
+    getDiffAgainstMaster.mockResolvedValue({
+      db: 'fakeDiff',
+      display: 'fakeDiff',
+    })
     getLessons.mockResolvedValueOnce({ lessons }).mockResolvedValueOnce()
     askForChallenges.mockResolvedValue({
       lessonId: 'fakeLessonID',

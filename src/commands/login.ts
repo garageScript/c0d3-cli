@@ -11,7 +11,7 @@ const login = async ({ url }: { url: string }): Promise<void> => {
     spinner.start('Login...')
     const newCliToken = await getToken(credentials, url)
     await saveToken(newCliToken)
-    spinner.succeed('Your are logged in\n')
+    spinner.succeed('You are logged in\n')
   } catch (error) {
     spinner.fail(error.message)
   }

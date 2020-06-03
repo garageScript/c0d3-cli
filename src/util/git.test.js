@@ -12,14 +12,18 @@ jest.mock('simple-git/promise', () =>
       diff: jest
         .fn()
         .mockResolvedValueOnce('fakeDiff')
-        .mockResolvedValueOnce('')
+        .mockResolvedValueOnce('fakeDiff')
+        .mockResolvedValueOnce(''),
     }
   })
 )
 
 describe('getDiffAgainstMaster', () => {
   test('Should return diff', () => {
-    expect(getDiffAgainstMaster()).resolves.toBe('fakeDiff')
+    expect(getDiffAgainstMaster()).resolves.toEqual({
+      display: 'fakeDiff',
+      db: 'fakeDiff',
+    })
   })
 
   test('Should throw error: WRONG_BRANCH', () => {
