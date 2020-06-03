@@ -9,7 +9,7 @@ const spinner = ora()
 const logout = async (): Promise<void> => {
   try {
     await fsPromises.rmdir(HIDDEN_DIR, { recursive: true })
-    spinner.succeed('Your are logout\n')
+    spinner.succeed('You are logged in\n')
   } catch {
     spinner.fail(LOGOUT_ERROR)
   }
