@@ -22,12 +22,12 @@ const submit = async ({
     const diff = await getDiffAgainstMaster()
     const lessons = await getLessons(url)
     const { lessonId, challengeId } = await askForChallenges(lessons)
-    displayBoxUI(DIFF_MSG + diff)
+    displayBoxUI(DIFF_MSG + diff.display)
     await sendSubmission(url, {
       lessonId,
       challengeId,
       cliToken,
-      diff,
+      diff: diff.db,
     })
   } catch (error) {
     spinner.fail(error.message)
