@@ -77,7 +77,7 @@ export const askForChallenges: AskForChallenges = async (lessons) => {
 
   return {
     lessonId: lessonsByOrder[lessonOrder].id,
-    challengeId: challengeByOrder[challengeOrder].id,
+    challengeId: Number(challengeByOrder[challengeOrder].id),
   }
 }
 

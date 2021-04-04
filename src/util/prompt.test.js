@@ -99,7 +99,7 @@ describe('askForChallenges', () => {
       .mockResolvedValueOnce({ lessonOrder: '0' })
       .mockResolvedValueOnce({ challengeOrder: '10' })
     expect(askForChallenges(lessons)).resolves.toEqual({
-      challengeId: '104',
+      challengeId: 104,
       lessonId: '5'
     })
   })
