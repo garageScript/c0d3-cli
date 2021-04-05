@@ -32,7 +32,8 @@ export const sendSubmission: SendSubmission = async (
     spinner.start('Sending...')
     await request(url, POST_SUBMISSION, submission)
     spinner.succeed(SUBMISSION_SUCCEED)
-  } catch {
+  } catch (err) {
+    console.log(err)
     spinner.stop()
     throw new Error(SUBMISSION_ERROR)
   }
