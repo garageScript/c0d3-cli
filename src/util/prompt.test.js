@@ -76,17 +76,17 @@ describe('getOptionDisplayStr', () => {
 describe('askForChallenges', () => {
   const lessons = [
     {
-      id: '5',
+      id: 5,
       title: 'Foundations of JavaScript',
       order: 0,
       challenges: [
         {
-          id: '110',
+          id: 110,
           title: 'Is Sum > 10',
           order: 7
         },
         {
-          id: '104',
+          id: 104,
           title: 'Functional Sums',
           order: 10
         }
@@ -100,7 +100,7 @@ describe('askForChallenges', () => {
       .mockResolvedValueOnce({ challengeOrder: '10' })
     expect(askForChallenges(lessons)).resolves.toEqual({
       challengeId: 104,
-      lessonId: '5'
+      lessonId: 5
     })
   })
 
