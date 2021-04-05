@@ -76,7 +76,7 @@ export const askForChallenges: AskForChallenges = async (lessons) => {
   console.log(`${bold.cyan(`  ► ${challengeByOrder[challengeOrder].title}`)}`)
 
   return {
-    lessonId: lessonsByOrder[lessonOrder].id,
+    lessonId: Number(lessonsByOrder[lessonOrder].id),
     challengeId: Number(challengeByOrder[challengeOrder].id),
   }
 }
