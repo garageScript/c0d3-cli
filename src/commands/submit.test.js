@@ -19,7 +19,7 @@ describe('c0d3 submit', () => {
       title: 'Foundations of JavaScript',
       challenges: [
         {
-          id: '110',
+          id: 110,
           title: 'Is Sum > 10',
           order: 7,
         },
@@ -38,8 +38,8 @@ describe('c0d3 submit', () => {
       display: 'fakeDiff',
     })
     askForChallenges.mockResolvedValue({
-      lessonId: 'fakeLessonID',
-      challengeId: 'fakeChallengeId',
+      lessonId: 666,
+      challengeId: 666,
     })
     expect(await submit(args)).toBe(undefined)
   })
@@ -59,8 +59,8 @@ describe('c0d3 submit', () => {
     const params = [
       args.url,
       {
-        lessonId: 'fakeLessonID',
-        challengeId: 'fakeChallengeId',
+        lessonId: 666,
+        challengeId: 666,
         cliToken: DEBUG_TOKEN,
         diff: 'fakeDiff',
       },
@@ -71,8 +71,8 @@ describe('c0d3 submit', () => {
     })
     getLessons.mockResolvedValueOnce({ lessons }).mockResolvedValueOnce()
     askForChallenges.mockResolvedValue({
-      lessonId: 'fakeLessonID',
-      challengeId: 'fakeChallengeId',
+      lessonId: 666,
+      challengeId: 666,
     })
 
     const res = await submit(args)

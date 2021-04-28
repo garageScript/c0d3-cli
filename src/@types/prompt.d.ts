@@ -1,11 +1,11 @@
 export interface Challenge {
-  id: string
+  id: number
   order: number
   title: string
 }
 
 export interface Lesson {
-  id: string
+  id: number
   order: number
   title: string
   challenges: [Challenge]
@@ -24,6 +24,6 @@ export type ArrayValue = [Lesson | Challenge]
 export type AskForChallenges = (
   lessons: [Lesson]
 ) => Promise<{
-  lessonId: string
-  challengeId: string
+  lessonId: number
+  challengeId: number
 }>

@@ -40,7 +40,7 @@ export const getOptionDisplayStr: GetOptionDisplayStr = (array) => {
 export const askForChallenges: AskForChallenges = async (lessons) => {
   const lessonsByOrder = getMapFromOptions(lessons)
   displayBoxUI(getOptionDisplayStr(lessons).trimEnd())
-  const { lessonOrder }: { lessonOrder: string } = await prompt([
+  const { lessonOrder }: { lessonOrder: number } = await prompt([
     {
       type: 'input',
       name: 'lessonOrder',
@@ -61,7 +61,7 @@ export const askForChallenges: AskForChallenges = async (lessons) => {
     getOptionDisplayStr(lessonsByOrder[lessonOrder].challenges).trimEnd()
   )
 
-  const { challengeOrder }: { challengeOrder: string } = await prompt([
+  const { challengeOrder }: { challengeOrder: number } = await prompt([
     {
       type: 'input',
       name: 'challengeOrder',
@@ -76,8 +76,8 @@ export const askForChallenges: AskForChallenges = async (lessons) => {
   console.log(`${bold.cyan(`  ► ${challengeByOrder[challengeOrder].title}`)}`)
 
   return {
-    lessonId: lessonsByOrder[lessonOrder].id,
-    challengeId: challengeByOrder[challengeOrder].id,
+    lessonId: Number(lessonsByOrder[lessonOrder].id),
+    challengeId: Number(challengeByOrder[challengeOrder].id),
   }
 }
 

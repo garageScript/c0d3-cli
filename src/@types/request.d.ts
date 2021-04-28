@@ -1,8 +1,8 @@
 import { Lesson } from './prompt'
 
 export interface Submission {
-  lessonId: string
-  challengeId: string
+  lessonId: number
+  challengeId: number
   cliToken: string
   diff: string
 }
