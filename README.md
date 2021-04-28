@@ -67,6 +67,14 @@
   }
 ```
 
+### Publishing
+
+1. Update `package.json` version.
+2. run `npm run build`
+3. Publish! `npm publish`
+
+Must be done in the order above (specifically, build then publish) because build produces a package.json inside the `dist` folder, which is used for upgrade checks
+
 ## 
 
 ## License
