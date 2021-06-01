@@ -47,14 +47,3 @@ Please run ${bold.magenta(
 )} to login first, then run ${bold.magenta('c0d3 submit')}.\n`
 
 export const LOGOUT_ERROR = bold.red('The logout has failed.\n')
-
-export const DISALLOWED_FILES_COMMITTED = (files: string[]): string => {
-  const singleFile = files.length > 1
-  return bold.red(
-    `Your submission contains ${files.join(', ')}, ${
-      singleFile ? 'these files are' : 'this file is'
-    } not meant to be submitted. Please remove ${
-      singleFile ? 'them' : 'it'
-    } from your commit. Ask for help on C0D3 Discord if you are unsure how to fix this.`
-  )
-}

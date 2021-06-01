@@ -1,14 +1,8 @@
 import gitP from 'simple-git/promise'
 import { DISALLOWED_FILES } from '../constants'
-import {
-  CURRENT_BRANCH,
-  DISALLOWED_FILES_COMMITTED,
-  NO_DIFFERENCE,
-  WRONG_BRANCH,
-} from '../messages'
+import { CURRENT_BRANCH, NO_DIFFERENCE, WRONG_BRANCH } from '../messages'
 
 type DiffObject = {
-  changedFiles: string[]
   db: string
   display: string
 }
@@ -20,30 +14,31 @@ export const getDiffAgainstMaster = async (): Promise<DiffObject> => {
   if (current === 'master') throw new Error(WRONG_BRANCH)
   console.log(`${CURRENT_BRANCH} ${current}\n`)
 
+  const ignoreFileOptions = DISALLOWED_FILES.map((file) => `:!*${file}`)
+
   const changedFilesString = await git.diff([
     `master..${current}`,
     '--name-only',
+    '--',
+    '.',
+    ...ignoreFileOptions,
   ])
 
   const hasDiffFromMaster = !!changedFilesString.length
   if (!hasDiffFromMaster) throw new Error(NO_DIFFERENCE)
 
-  const changedFiles = changedFilesString.trim().split('\n')
-
-  const conflictingFiles = changedFiles.filter((file) =>
-    DISALLOWED_FILES.includes(file)
-  )
-
-  if (conflictingFiles.length)
-    throw new Error(DISALLOWED_FILES_COMMITTED(conflictingFiles))
-
   const [display, db] = await Promise.all([
-    git.diff([`--color`, `master..${current}`]),
-    git.diff([`master..${current}`]),
+    git.diff([
+      `--color`,
+      `master..${current}`,
+      '--',
+      '.',
+      ...ignoreFileOptions,
+    ]),
+    git.diff([`master..${current}`, '--', '.', ...ignoreFileOptions]),
   ])
 
   return {
-    changedFiles,
     display,
     db,
   }
