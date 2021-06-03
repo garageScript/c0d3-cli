@@ -36,7 +36,7 @@ export const SUBMISSION_ERROR = bold.red(
 )
 
 export const SUBMISSION_SUCCEED = bold.green(
-  `Your submission was successfull!
+  `Your submission was successful!
   You will receive notification in chat when it is reviewed.
   Thank you!\n`
 )

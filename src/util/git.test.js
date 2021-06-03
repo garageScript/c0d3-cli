@@ -1,5 +1,8 @@
 import { getDiffAgainstMaster } from './git'
-import { WRONG_BRANCH, NO_DIFFERENCE } from '../messages'
+import {
+  WRONG_BRANCH,
+  NO_DIFFERENCE,
+} from '../messages'
 
 jest.mock('simple-git/promise', () =>
   jest.fn(() => {
@@ -9,11 +12,22 @@ jest.mock('simple-git/promise', () =>
         .mockResolvedValueOnce({ current: 'notMaster' })
         .mockResolvedValueOnce({ current: 'master' })
         .mockResolvedValueOnce({ current: 'notMaster' }),
+
       diff: jest
         .fn()
+        // Test 1
+        // Called with --name-only flag
+        .mockResolvedValueOnce('index.js')
+        // Db Diff
         .mockResolvedValueOnce('fakeDiff')
+        // Display Diff
         .mockResolvedValueOnce('fakeDiff')
+        // Test 2
+        // Stops at wrong branch error
+        // Test 3
+        // Called with --name-only flag
         .mockResolvedValueOnce(''),
+        // no difference
     }
   })
 )
