@@ -16,7 +16,7 @@ export const getDiffAgainstMaster = async (): Promise<DiffObject> => {
 
   // Files to exclude relative to git root
   const ignoreFileOptions = DISALLOWED_FILES.map(
-    (file) => `:(exclude,top)${file}`
+    (file) => `:(exclude,top)*${file}`
   )
 
   const changedFilesString = await git.diff([
@@ -29,11 +29,7 @@ export const getDiffAgainstMaster = async (): Promise<DiffObject> => {
   if (!hasDiffFromMaster) throw new Error(NO_DIFFERENCE)
 
   const [display, db] = await Promise.all([
-    git.diff([
-      `--color`,
-      `master..${current}`,
-      ...ignoreFileOptions,
-    ]),
+    git.diff([`--color`, `master..${current}`, ...ignoreFileOptions]),
     git.diff([`master..${current}`, ...ignoreFileOptions]),
   ])
 
