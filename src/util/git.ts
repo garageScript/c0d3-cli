@@ -14,13 +14,14 @@ export const getDiffAgainstMaster = async (): Promise<DiffObject> => {
   if (current === 'master') throw new Error(WRONG_BRANCH)
   console.log(`${CURRENT_BRANCH} ${current}\n`)
 
-  const ignoreFileOptions = DISALLOWED_FILES.map((file) => `:!*${file}`)
+  // Files to exclude relative to git root
+  const ignoreFileOptions = DISALLOWED_FILES.map(
+    (file) => `:(exclude,top)${file}`
+  )
 
   const changedFilesString = await git.diff([
     `master..${current}`,
     '--name-only',
-    '--',
-    '.',
     ...ignoreFileOptions,
   ])
 
@@ -31,11 +32,9 @@ export const getDiffAgainstMaster = async (): Promise<DiffObject> => {
     git.diff([
       `--color`,
       `master..${current}`,
-      '--',
-      '.',
       ...ignoreFileOptions,
     ]),
-    git.diff([`master..${current}`, '--', '.', ...ignoreFileOptions]),
+    git.diff([`master..${current}`, ...ignoreFileOptions]),
   ])
 
   return {
