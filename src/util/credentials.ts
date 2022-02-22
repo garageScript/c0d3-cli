@@ -38,7 +38,7 @@ export const getToken: GetToken = async (credentials, url) => {
     const { login } = await request<Token>(url, GET_CLI_TOKEN, credentials)
     return login.cliToken
   } catch (error) {
-    const status = error?.request?.status
+    const status = error?.response?.status
     const code = error?.code
     const message = error?.message
 
