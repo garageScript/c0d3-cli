@@ -27,3 +27,7 @@ export type AskForChallenges = (
   lessonId: number
   challengeId: number
 }>
+
+export type AskForConfirmation = (message: string) => Promise<Question>
+
+export type Question = { question: boolean }
