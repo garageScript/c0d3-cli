@@ -1,9 +1,7 @@
 import submit from './submit'
-import { FAIL_TO_GET_LESSONS, SUBMISSION_ERROR } from '../messages'
 import { DEBUG_TOKEN } from '../constants'
 import { getDiffAgainstMaster } from '../util/git'
-import { askForChallenges } from '../util/prompt'
-// import { displayBoxUI } from '../util/boxen'
+import { askForChallenges, askForConfirmation } from '../util/prompt'
 import { getLessons, sendSubmission } from '../util/request'
 
 jest.mock('../util/credentials.ts')
@@ -29,6 +27,50 @@ describe('c0d3 submit', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+  })
+
+  test('Should submit if the answer is true', async () => {
+    const args = { url: 'fakeURL', debug: false }
+    
+    getDiffAgainstMaster.mockResolvedValue({
+      db: 'fakeDiff',
+      display: 'fakeDiff',
+    })
+
+    askForChallenges.mockResolvedValue({
+      lessonId: 666,
+      challengeId: 666,
+    })
+
+    askForConfirmation.mockResolvedValue({
+      question: true
+    })
+
+    await submit(args)
+
+    expect(sendSubmission).toHaveBeenCalled()
+  })
+
+  test('Should not submit if the answer is false', async () => {
+    const args = { url: 'fakeURL', debug: false }
+    
+    getDiffAgainstMaster.mockResolvedValue({
+      db: 'fakeDiff',
+      display: 'fakeDiff',
+    })
+
+    askForChallenges.mockResolvedValue({
+      lessonId: 666,
+      challengeId: 666,
+    })
+
+    askForConfirmation.mockResolvedValue({
+      question: false
+    })
+
+    await submit(args)
+
+    expect(sendSubmission).toHaveBeenCalledTimes(0)
   })
 
   test('Should submit without error', async () => {
@@ -74,6 +116,11 @@ describe('c0d3 submit', () => {
       lessonId: 666,
       challengeId: 666,
     })
+
+    askForConfirmation.mockResolvedValue({
+      question: true
+    })
+
 
     const res = await submit(args)
     expect(res).toBe(undefined)

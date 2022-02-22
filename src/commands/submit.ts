@@ -2,7 +2,7 @@ import ora from 'ora'
 
 import { DIFF_MSG } from '../messages'
 import { displayBoxUI } from '../util/boxen'
-import { askForChallenges } from '../util/prompt'
+import { askForChallenges, askForConfirmation } from '../util/prompt'
 import { DEBUG_TOKEN } from '../constants'
 import { getDiffAgainstMaster } from '../util/git'
 import { getCredentials } from '../util/credentials'
@@ -22,13 +22,18 @@ const submit = async ({
     const diff = await getDiffAgainstMaster()
     const lessons = await getLessons(url)
     const { lessonId, challengeId } = await askForChallenges(lessons)
+
     displayBoxUI(DIFF_MSG + diff.display)
-    await sendSubmission(url, {
-      lessonId,
-      challengeId,
-      cliToken,
-      diff: diff.db,
-    })
+    const confirm = await askForConfirmation('The changes are correct?')
+
+    if (confirm.question) {
+      await sendSubmission(url, {
+        lessonId,
+        challengeId,
+        cliToken,
+        diff: diff.db,
+      })
+    }
   } catch (error) {
     spinner.fail(error.message)
   }
