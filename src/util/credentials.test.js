@@ -77,7 +77,7 @@ describe('getToken', () => {
 
   test('should throw error: WRONG_CREDENTIALS', () => {
     request.mockRejectedValue({
-        response: {
+        request: {
           status: 400
         }
     })
@@ -115,7 +115,7 @@ describe('getToken', () => {
 
   test('should throw error: UNSUPPORTED_GRAPHQL_REQUEST', () => {
     request.mockRejectedValue({
-      response: {
+        request: {
           status: 403
         }
     })
