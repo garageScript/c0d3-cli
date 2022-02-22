@@ -50,7 +50,10 @@ export const getToken: GetToken = async (credentials, url) => {
       throw new Error(UNSUPPORTED_GRAPHQL_REQUEST)
     }
 
-    // If the domain is not found or isn't
+    /* 
+    If the domain is not found or no 
+    graphql server to handle the request
+    */
     if (code && (code === 'ENOTFOUND' || code === 'CERT_HAS_EXPIRED')) {
       throw new Error(UNREACHABLE_URL)
     }
