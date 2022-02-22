@@ -5,6 +5,8 @@ import {
   GetMapFromOptions,
   GetOptionDisplayStr,
   AskForChallenges,
+  Question,
+  AskForConfirmation,
 } from '../@types/prompt'
 import { displayBoxUI } from '../util/boxen'
 import { Credential } from '../@types/credentials'
@@ -88,4 +90,14 @@ export const askCredentials = async (): Promise<Credential> => {
   }
 
   return credential
+}
+
+export const askForConfirmation: AskForConfirmation = async (message) => {
+  const confirm: Question = await prompt({
+    type: 'confirm',
+    name: 'question',
+    message,
+  })
+
+  return confirm
 }
