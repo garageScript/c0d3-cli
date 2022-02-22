@@ -23,22 +23,6 @@ export const WRONG_CREDENTIALS = bold.red(
   'Invalid credentials, please try again!\n'
 )
 
-export const UNREACHABLE_URL = bold.red(
-  'Server unreachable. Try again later.\n'
-)
-
-export const INVALID_URL = bold.red(
-  `Invalid URL. Only absolute URLs are supported (e.g, https://fakegraphql)`
-)
-
-export const UNSUPPORTED_GRAPHQL_REQUEST = bold.red(
-  'The provided GraphQL server cannot handle this request. Please check your server.'
-)
-
-export const UNHANDLED_ERROR = bold.red(
-  'Unhandled error. Please create an issue about it with a way to reproduce it in https://github.com/garageScript/c0d3-cli/issues'
-)
-
 export const SAVE_TOKEN_ERROR = bold.red(
   'Unable to create hidden directory and save credentials\n'
 )
