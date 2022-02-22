@@ -11,15 +11,7 @@ import {
 } from '../@types/credentials'
 import { IS_TOKEN_VALID, GET_CLI_TOKEN } from '../graphql'
 import { CREDENTIALS_PATH, HIDDEN_DIR } from '../constants'
-import {
-  WRONG_CREDENTIALS,
-  SAVE_TOKEN_ERROR,
-  NOT_LOGGED_IN,
-  UNREACHABLE_URL,
-  INVALID_URL,
-  UNSUPPORTED_GRAPHQL_REQUEST,
-  UNHANDLED_ERROR,
-} from '../messages'
+import { WRONG_CREDENTIALS, SAVE_TOKEN_ERROR, NOT_LOGGED_IN, UNREACHABLE_URL, INVALID_URL, UNSUPPORTED_GRAPHQL_REQUEST, UNHANDLED_ERROR } from '../messages'
 
 export const getCredentials: VerifyToken = async (url) => {
   try {
@@ -50,8 +42,11 @@ export const getToken: GetToken = async (credentials, url) => {
       throw new Error(UNSUPPORTED_GRAPHQL_REQUEST)
     }
 
-    // If the domain is not found or isn't
-    if (code && (code === 'ENOTFOUND' || code === 'CERT_HAS_EXPIRED')) {
+    // If the domain is not found or isn't 
+    if (code && (
+      code === 'ENOTFOUND' || code === 'CERT_HAS_EXPIRED'
+    )
+    ) {
       throw new Error(UNREACHABLE_URL)
     }
 

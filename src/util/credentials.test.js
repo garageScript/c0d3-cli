@@ -124,7 +124,7 @@ describe('getToken', () => {
     ).rejects.toThrowError(UNSUPPORTED_GRAPHQL_REQUEST)
   })
 
-  test('should throw error: UNHANDLED_ERROR', () => {
+  test('should throw error: UNSUPPORTED_GRAPHQL_REQUEST', () => {
     request.mockRejectedValue()
     expect(
       credentials.getToken('fakeCredentials', 'fakeUrl')
