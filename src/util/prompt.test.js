@@ -1,8 +1,7 @@
 import { cyan } from 'chalk'
 import enquirer from 'enquirer'
 import { PROMPT_ORDER, WRONG_INPUT } from '../messages'
-import { displayBoxUI } from '../util/boxen'
-import { getMapFromOptions, getOptionDisplayStr, askForChallenges, askCredentials } from './prompt'
+import { getMapFromOptions, getOptionDisplayStr, askForChallenges, askCredentials, askForConfirmation } from './prompt'
 
 jest.mock('enquirer')
 jest.mock('../util/boxen')
@@ -137,5 +136,21 @@ describe('askCredentials', () => {
     const credentials = { username: '', password: '' }
     enquirer.prompt = jest.fn().mockResolvedValue(credentials)
     expect(askCredentials()).rejects.toThrowError(WRONG_INPUT)
+  })
+})
+
+describe('askForConfirmation', () => {
+  test('should return true', () => {
+    const answer = { question: true }
+    enquirer.prompt = jest.fn().mockResolvedValue(answer)
+
+    expect(askForConfirmation('Testing?')).resolves.toEqual(answer)
+  })
+
+  test('should return false', () => {
+    const answer = { question: false }
+    enquirer.prompt = jest.fn().mockResolvedValue(answer)
+
+    expect(askForConfirmation('Testing?')).resolves.toEqual(answer)
   })
 })
