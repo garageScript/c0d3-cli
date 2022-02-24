@@ -1,5 +1,5 @@
 import fs, { promises as fsPromises } from 'fs'
-import { SAVE_TOKEN_ERROR, WRONG_CREDENTIALS, NOT_LOGGED_IN } from '../messages'
+import { SAVE_TOKEN_ERROR, WRONG_CREDENTIALS, NOT_LOGGED_IN, UNREACHABLE_URL, INVALID_URL, UNSUPPORTED_GRAPHQL_REQUEST, UNHANDLED_ERROR } from '../messages'
 import * as constants from '../constants'
 import { request } from 'graphql-request'
 import * as credentials from './credentials'
@@ -76,10 +76,59 @@ describe('getToken', () => {
   })
 
   test('should throw error: WRONG_CREDENTIALS', () => {
-    request.mockRejectedValue()
+    request.mockRejectedValue({
+        response: {
+          status: 400
+        }
+    })
     expect(
       credentials.getToken('fakeCredentials', 'fakeUrl')
     ).rejects.toThrowError(WRONG_CREDENTIALS)
+  })
+
+  test('should throw error: UNREACHABLE_URL', () => {
+    request.mockRejectedValue({
+        code: 'ENOTFOUND'
+    })
+    expect(
+      credentials.getToken('fakeCredentials', 'fakeUrl')
+    ).rejects.toThrowError(UNREACHABLE_URL)
+  })
+
+  test('should throw error: UNREACHABLE_URL', () => {
+    request.mockRejectedValue({
+        code: 'CERT_HAS_EXPIRED'
+    })
+    expect(
+      credentials.getToken('fakeCredentials', 'fakeUrl')
+    ).rejects.toThrowError(UNREACHABLE_URL)
+  })
+
+  test('should throw error: INVALID_URL', () => {
+    request.mockRejectedValue({
+        message: 'Only absolute URLs are supported'
+    })
+    expect(
+      credentials.getToken('fakeCredentials', 'fakeUrl')
+    ).rejects.toThrowError(INVALID_URL)
+  })
+
+  test('should throw error: UNSUPPORTED_GRAPHQL_REQUEST', () => {
+    request.mockRejectedValue({
+      response: {
+          status: 403
+        }
+    })
+    expect(
+      credentials.getToken('fakeCredentials', 'fakeUrl')
+    ).rejects.toThrowError(UNSUPPORTED_GRAPHQL_REQUEST)
+  })
+
+  test('should throw error: UNHANDLED_ERROR', () => {
+    request.mockRejectedValue()
+    expect(
+      credentials.getToken('fakeCredentials', 'fakeUrl')
+    ).rejects.toThrowError(UNHANDLED_ERROR)
   })
 })
 
