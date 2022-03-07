@@ -1,4 +1,4 @@
-import request from 'graphql-request'
+import { GraphQLClient, request } from 'graphql-request'
 import { getLessons, sendSubmission } from './request'
 
 jest.mock('graphql-request')
@@ -17,7 +17,14 @@ describe('sendSubmission', () => {
   })
 
   test('Should throw error', () => {
-    request.mockRejectedValue()
+    GraphQLClient.mockImplementation(() => {
+      return {
+          request: () => {
+            throw new Error('hi')
+          }
+        }
+    });
+    
     expect(sendSubmission('fakeUrl', submission)).rejects.toThrowError()
   })
 })
