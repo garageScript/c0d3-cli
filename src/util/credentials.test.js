@@ -78,7 +78,7 @@ describe('getToken', () => {
   test('should throw error: WRONG_CREDENTIALS', () => {
     request.mockRejectedValue({
         response: {
-          status: 400
+          errors: [{ message: 'Password is invalid' }]
         }
     })
     expect(
@@ -86,7 +86,7 @@ describe('getToken', () => {
     ).rejects.toThrowError(WRONG_CREDENTIALS)
   })
 
-  test('should throw error: UNREACHABLE_URL', () => {
+  test('should throw error: UNREACHABLE_URL when code is ENOTFOUND', () => {
     request.mockRejectedValue({
         code: 'ENOTFOUND'
     })
@@ -95,7 +95,7 @@ describe('getToken', () => {
     ).rejects.toThrowError(UNREACHABLE_URL)
   })
 
-  test('should throw error: UNREACHABLE_URL', () => {
+  test('should throw error: UNREACHABLE_URL when code is CERT_HAS_EXPIRED', () => {
     request.mockRejectedValue({
         code: 'CERT_HAS_EXPIRED'
     })
