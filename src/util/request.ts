@@ -1,5 +1,5 @@
 import ora from 'ora'
-import request from 'graphql-request'
+import { request, GraphQLClient } from 'graphql-request'
 
 import { Lesson } from '../@types/prompt'
 import { GetLessons, SendSubmission } from '../@types/request'
@@ -29,8 +29,14 @@ export const sendSubmission: SendSubmission = async (
   submission
 ): Promise<void> => {
   try {
+    const graphQLClient = new GraphQLClient(url, {
+      headers: {
+        authorization: `Bearer ${submission.cliToken}`,
+      },
+    })
+
     spinner.start('Sending...')
-    await request(url, POST_SUBMISSION, submission)
+    await graphQLClient.request(POST_SUBMISSION, submission)
     spinner.succeed(SUBMISSION_SUCCEED)
   } catch (err) {
     console.log(err)
