@@ -31,7 +31,7 @@
     "enquirer": "^2.3.5",
     "graphql-request": "^1.6.0",
     "ora": "^4.0.4",
-    "simple-git": "^2.4.0",
+    "simple-git": "^3.3.0",
     "update-notifier": "^4.1.0"
   },
   "devDependencies": {
