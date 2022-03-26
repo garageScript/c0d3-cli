@@ -9,6 +9,8 @@ import {
   SUBMISSION_ERROR,
   SUBMISSION_SUCCEED,
 } from '../messages'
+import { decode, encode } from './encoding'
+const pkg = require('../../package.json')
 
 const spinner = ora()
 
@@ -29,9 +31,14 @@ export const sendSubmission: SendSubmission = async (
   submission
 ): Promise<void> => {
   try {
+    const encodedCliData = encode({
+      ...decode(submission.cliToken),
+      cliVersion: pkg.version,
+    })
+
     const graphQLClient = new GraphQLClient(url, {
       headers: {
-        authorization: `Bearer ${submission.cliToken}`,
+        authorization: `Bearer ${encodedCliData}`,
       },
     })
 
