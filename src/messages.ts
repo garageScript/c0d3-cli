@@ -14,6 +14,11 @@ export const WRONG_BRANCH = `Submissions must come from branches that are ${bold
 )}
 Please make sure that you branch, add, commit, and submit correctly.\n`
 
+export const NOT_MASTER = `Hey, You checked out from the wrong branch! You should checkout from master.\n
+ Here's a link to solve this problem: ${bold.magenta(
+   'https://github.com/garageScript/c0d3-cli/wiki/Students-issues#checked-out-from-a-branch-other-than-master'
+ )}\n`
+
 export const PROMPT_ORDER = bold.red(`The number needs to be a non-negative integer.
 To cancel submission, press Ctrl + d`)
 
