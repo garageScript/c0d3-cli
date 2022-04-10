@@ -1,6 +1,12 @@
 import gitP from 'simple-git/promise'
 import { DISALLOWED_FILES } from '../constants'
-import { CURRENT_BRANCH, NO_DIFFERENCE, WRONG_BRANCH } from '../messages'
+import {
+  CURRENT_BRANCH,
+  NOT_MASTER,
+  NO_DIFFERENCE,
+  WRONG_BRANCH,
+  FAILED_GET_LASTCHECKOUT,
+} from '../messages'
 
 type DiffObject = {
   db: string
@@ -8,6 +14,27 @@ type DiffObject = {
 }
 
 const git = gitP()
+
+const didCheckoutFromMaster = async () => {
+  const reflog = await git.raw('reflog')
+  const reflogToArray = reflog.split('\n')
+  const filterReflogToMoving = reflogToArray.filter((x) =>
+    x.includes('checkout: moving')
+  )
+
+  const splitLastCheckoutMove = filterReflogToMoving[0]
+    // Extracts: moving from <branch> to <branch>
+    ?.match(/moving from [\w]+ to [\w]+/)?.[0]
+    // Extracts: <branch> to <branch>
+    ?.match(/[\w]+ to [\w]+/)?.[0]
+    .split('to')
+
+  if (!splitLastCheckoutMove) return FAILED_GET_LASTCHECKOUT
+
+  const isMaster = splitLastCheckoutMove[0].trim() === 'master'
+
+  return isMaster
+}
 
 export const getDiffAgainstMaster = async (): Promise<DiffObject> => {
   const { current } = await git.branch()
@@ -27,6 +54,10 @@ export const getDiffAgainstMaster = async (): Promise<DiffObject> => {
 
   const hasDiffFromMaster = !!changedFilesString.length
   if (!hasDiffFromMaster) throw new Error(NO_DIFFERENCE)
+
+  const isMasterBranch = await didCheckoutFromMaster()
+  if (typeof isMasterBranch === 'string') console.log(isMasterBranch)
+  if (!isMasterBranch) throw new Error(NOT_MASTER)
 
   const [display, db] = await Promise.all([
     git.diff([`--color`, `master..${current}`, ...ignoreFileOptions]),
