@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import 'dotenv/config'
 import updateNotifier from 'update-notifier'
 import { createCommand } from 'commander'
 import { bold } from 'chalk'
@@ -8,11 +9,24 @@ import submit from './commands/submit'
 import login from './commands/login'
 import logout from './commands/logout'
 import { URL } from './constants'
+import * as Sentry from '@sentry/node'
+import '@sentry/tracing'
+
+const SENTRY_DSN = process.env.SENTRY_DSN
+
+SENTRY_DSN &&
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+
+    // Set tracesSampleRate to 0 to stop monitoring
+    // the performance of transactions
+    tracesSampleRate: 1.0,
+  })
 
 const pkg = require('../package.json')
 const program = createCommand()
 updateNotifier({ pkg, updateCheckInterval: 0 }).notify()
-console.clear()
+// console.clear()
 
 export const init = (): void => {
   // List Options
