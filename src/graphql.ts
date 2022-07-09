@@ -28,7 +28,7 @@ export const POST_SUBMISSION = `
   mutation createSubmission(
     $lessonId: Int!
     $challengeId: Int!
-    $cliToken: String!
+    $cliToken: String
     $diff: String!
   ) {
     createSubmission(
