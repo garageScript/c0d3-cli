@@ -7,6 +7,7 @@ import { DEBUG_TOKEN } from '../constants'
 import { getDiffAgainstMaster } from '../util/git'
 import { getCredentials } from '../util/credentials'
 import { getLessons, sendSubmission } from '../util/request'
+import * as Sentry from '@sentry/node'
 
 const spinner = ora()
 
@@ -35,6 +36,7 @@ const submit = async ({
       })
     }
   } catch (error) {
+    Sentry.captureException(error)
     spinner.fail(error.message)
   }
 }

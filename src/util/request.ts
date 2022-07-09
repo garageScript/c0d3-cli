@@ -1,5 +1,6 @@
 import ora from 'ora'
 import { request, GraphQLClient } from 'graphql-request'
+import * as Sentry from '@sentry/node'
 
 import { Lesson } from '../@types/prompt'
 import { GetLessons, SendSubmission } from '../@types/request'
@@ -20,7 +21,8 @@ export const getLessons: GetLessons = async (url) => {
     const { lessons } = await request<{ lessons: [Lesson] }>(url, GET_LESSONS)
     spinner.stop()
     return lessons
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error)
     spinner.stop()
     throw new Error(FAIL_TO_GET_LESSONS)
   }
@@ -45,8 +47,8 @@ export const sendSubmission: SendSubmission = async (
     spinner.start('Sending...')
     await graphQLClient.request(POST_SUBMISSION, submission)
     spinner.succeed(SUBMISSION_SUCCEED)
-  } catch (err) {
-    console.log(err)
+  } catch (error) {
+    Sentry.captureException(error)
     spinner.stop()
     throw new Error(SUBMISSION_ERROR)
   }

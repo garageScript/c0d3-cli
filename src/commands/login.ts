@@ -1,4 +1,5 @@
 import ora from 'ora'
+import * as Sentry from '@sentry/node'
 
 import { askCredentials } from '../util/prompt'
 import { getToken, saveToken } from '../util/credentials'
@@ -13,6 +14,7 @@ const login = async ({ url }: { url: string }): Promise<void> => {
     await saveToken(newCliToken)
     spinner.succeed('You are logged in\n')
   } catch (error) {
+    Sentry.captureException(error)
     spinner.fail(error.message)
   }
 }

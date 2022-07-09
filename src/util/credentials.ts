@@ -1,6 +1,7 @@
 import fs, { promises as fsPromises } from 'fs'
 import * as credentials from './credentials'
 import { request } from 'graphql-request'
+import * as Sentry from '@sentry/node'
 
 import {
   Token,
@@ -56,7 +57,10 @@ export const handleGetTokenError = (error: {
     If the domain is not found or no 
     graphql server to handle the request
   */
-  if (code && (code === 'ENOTFOUND' || code === 'CERT_HAS_EXPIRED')) {
+  if (
+    code &&
+    ['ENOTFOUND', 'CERT_HAS_EXPIRED', 'ECONNREFUSED'].includes(code)
+  ) {
     throw new Error(UNREACHABLE_URL)
   }
 
@@ -78,7 +82,8 @@ export const getCredentials: VerifyToken = async (url) => {
     if (!isTokenValid) throw Error
 
     return cliToken
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error)
     throw new Error(NOT_LOGGED_IN)
   }
 }
@@ -88,6 +93,7 @@ export const getToken: GetToken = async (credentials, url) => {
     const { login } = await request<Token>(url, GET_CLI_TOKEN, credentials)
     return login.cliToken
   } catch (error) {
+    Sentry.captureException(error)
     return handleGetTokenError(error)
   }
 }
@@ -96,7 +102,8 @@ export const saveToken: SaveToken = async (cliToken) => {
   try {
     credentials.createHiddenDir()
     await credentials.createCredentialsFile(cliToken)
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error)
     throw new Error(SAVE_TOKEN_ERROR)
   }
 }
