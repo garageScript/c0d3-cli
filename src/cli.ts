@@ -26,7 +26,7 @@ SENTRY_DSN &&
 const pkg = require('../package.json')
 const program = createCommand()
 updateNotifier({ pkg, updateCheckInterval: 0 }).notify()
-// console.clear()
+console.clear()
 
 export const init = (): void => {
   // List Options
