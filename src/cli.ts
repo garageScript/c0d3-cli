@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import 'dotenv/config'
 import updateNotifier from 'update-notifier'
 import { createCommand } from 'commander'
 import { bold } from 'chalk'
