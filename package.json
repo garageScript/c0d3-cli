@@ -25,6 +25,8 @@
   },
   "author": "c0d3.com",
   "dependencies": {
+    "@sentry/node": "^7.6.0",
+    "@sentry/tracing": "^7.6.0",
     "boxen": "^4.2.0",
     "chalk": "^4.0.0",
     "commander": "^5.1.0",
