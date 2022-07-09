@@ -30,6 +30,7 @@
     "boxen": "^4.2.0",
     "chalk": "^4.0.0",
     "commander": "^5.1.0",
+    "dotenv": "^16.0.1",
     "enquirer": "^2.3.5",
     "graphql-request": "^1.6.0",
     "ora": "^4.0.4",
