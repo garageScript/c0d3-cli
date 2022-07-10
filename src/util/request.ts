@@ -45,7 +45,16 @@ export const sendSubmission: SendSubmission = async (
     })
 
     spinner.start('Sending...')
-    await graphQLClient.request(POST_SUBMISSION, submission)
+
+    const { lessonId, challengeId, diff } = submission
+
+    const submissionWithoutCliToken = {
+      lessonId,
+      challengeId,
+      diff,
+    }
+
+    await graphQLClient.request(POST_SUBMISSION, submissionWithoutCliToken)
     spinner.succeed(SUBMISSION_SUCCEED)
   } catch (error) {
     Sentry.captureException(error)
