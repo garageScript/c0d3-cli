@@ -8,6 +8,19 @@ import submit from './commands/submit'
 import login from './commands/login'
 import logout from './commands/logout'
 import { URL } from './constants'
+import * as Sentry from '@sentry/node'
+import '@sentry/tracing'
+
+const SENTRY_DSN =
+  'https://e3bb7eb4562a4eafb2f925af9a4220ed@o385150.ingest.sentry.io/6559500'
+
+Sentry.init({
+  dsn: SENTRY_DSN,
+
+  // Set tracesSampleRate to 0 to stop monitoring
+  // the performance of transactions
+  tracesSampleRate: 1.0,
+})
 
 const pkg = require('../package.json')
 const program = createCommand()

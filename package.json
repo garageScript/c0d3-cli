@@ -1,6 +1,6 @@
 {
   "name": "c0d3",
-  "version": "2.2.7",
+  "version": "2.2.8",
   "description": "Command Line Interface (CLI) for c0d3.com",
   "license": "MIT",
   "homepage": "https://c0d3.com",
@@ -25,6 +25,8 @@
   },
   "author": "c0d3.com",
   "dependencies": {
+    "@sentry/node": "^7.6.0",
+    "@sentry/tracing": "^7.6.0",
     "boxen": "^4.2.0",
     "chalk": "^4.0.0",
     "commander": "^5.1.0",
