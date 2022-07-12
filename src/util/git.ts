@@ -6,7 +6,10 @@ import {
   NO_DIFFERENCE,
   WRONG_BRANCH,
   FAILED_GET_LASTCHECKOUT,
+  INVALID_CHALLENGE_FILE,
+  SUBMITTING_PLUS_TWO_FILES,
 } from '../messages'
+import { INVALID_SECOND_FILE } from './dynamicMessages'
 
 type DiffObject = {
   db: string
@@ -31,12 +34,58 @@ const didCheckoutFromMaster = async () => {
 
   if (!splitLastCheckoutMove) return FAILED_GET_LASTCHECKOUT
 
-  const isMaster = splitLastCheckoutMove[0].trim() === 'master'
-
-  return isMaster
+  return splitLastCheckoutMove[0].trim() === 'master'
 }
 
-export const getDiffAgainstMaster = async (): Promise<DiffObject> => {
+const validateFiles = (changedFilesString: string, lessonId: number) => {
+  // 4 is js3 or Objects
+  if (lessonId > 4) return
+
+  const predictValidFile = (e: string) =>
+    e.includes('/')
+      ? e.split('/')[1].match(fileNameRegex)
+      : e.match(fileNameRegex)
+
+  const changedFilesArray = changedFilesString.trim().split('\n')
+  const fileNameRegex = /(^\d+).js/g // Matches 1.js 2.js 3.js ...etc
+
+  // If a single file - [1.js]
+  if (changedFilesArray.length === 1 && changedFilesArray[0]) {
+    const isFileValid = changedFilesArray[0].split('/')[1]?.match(fileNameRegex)
+
+    if (!isFileValid) throw new Error(INVALID_CHALLENGE_FILE)
+
+    return
+  }
+
+  // If more than 2 files - [1.js, 2.js, 2.test.js]
+  if (changedFilesArray.length > 2) throw new Error(SUBMITTING_PLUS_TWO_FILES)
+
+  // If 2 files - [1.js, 1.test.js] || [1.js, 2.js]
+  const challengeFiles = changedFilesArray.filter(predictValidFile)
+
+  // If no challenge files
+  if (!challengeFiles.length) {
+    throw new Error(INVALID_CHALLENGE_FILE)
+  }
+
+  // If more than one challenge
+  if (challengeFiles.length > 1) {
+    throw new Error(SUBMITTING_PLUS_TWO_FILES)
+  }
+
+  const testFile = changedFilesArray.find((e) => e.includes('test'))
+
+  // If 2nd file is not a test file
+  if (!testFile) {
+    const invalidFile = changedFilesArray.find((e) => !predictValidFile(e))
+    throw new Error(INVALID_SECOND_FILE(invalidFile))
+  }
+}
+
+export const getDiffAgainstMaster = async (
+  lessonId: number
+): Promise<DiffObject> => {
   const { current } = await git.branch()
   if (current === 'master') throw new Error(WRONG_BRANCH)
   console.log(`${CURRENT_BRANCH} ${current}\n`)
@@ -58,6 +107,8 @@ export const getDiffAgainstMaster = async (): Promise<DiffObject> => {
   const isMasterBranch = await didCheckoutFromMaster()
   if (typeof isMasterBranch === 'string') console.log(isMasterBranch)
   if (!isMasterBranch) throw new Error(NOT_MASTER)
+
+  validateFiles(changedFilesString, lessonId)
 
   const [display, db] = await Promise.all([
     git.diff([`--color`, `master..${current}`, ...ignoreFileOptions]),

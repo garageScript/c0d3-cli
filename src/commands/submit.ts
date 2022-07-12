@@ -20,9 +20,9 @@ const submit = async ({
 }): Promise<void> => {
   try {
     const cliToken = debug ? DEBUG_TOKEN : await getCredentials(url)
-    const diff = await getDiffAgainstMaster()
     const lessons = await getLessons(url)
     const { lessonId, challengeId } = await askForChallenges(lessons)
+    const diff = await getDiffAgainstMaster(lessonId)
 
     displayBoxUI(DIFF_MSG + diff.display)
     const confirm = await askForConfirmation('The changes are correct?')

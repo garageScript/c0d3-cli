@@ -26,6 +26,23 @@ please either create an issue on ${bold.magenta(
   'https://discord.gg/MJ4PS4dK6J'
 )}\n`
 
+export const INVALID_CHALLENGE_FILE = bold.red(
+  'A valid challenge file could not be found. Make sure the file is not renamed and it has the following format: 1.js, 2.js, 3.js, ...etc\n'
+)
+
+export const SUBMITTING_PLUS_TWO_FILES = bold.red(`
+More than 2 files are being submitted. Please make sure there is no branching issues. 
+
+${bold.cyan('If there is, you can solve it by following the links below:')}
+${bold.magenta(`
+- https://www.c0d3.com/docs/setup#reusing-your-branches
+- https://github.com/garageScript/c0d3-cli/wiki/Students-issues#checked-out-from-a-branch-other-than-master`)}
+
+${bold.magenta(
+  `If the links above didn't help, please reach on Discord (https://discord.gg/MJ4PS4dK6J)!`
+)}
+`)
+
 export const PROMPT_ORDER = bold.red(`The number needs to be a non-negative integer.
 To cancel submission, press Ctrl + d`)
 
