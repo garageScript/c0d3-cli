@@ -37,9 +37,11 @@ const didCheckoutFromMaster = async () => {
   return splitLastCheckoutMove[0].trim() === 'master'
 }
 
-const validateFiles = (changedFilesString: string, lessonId: number) => {
-  // 4 is js3 or Objects
-  if (lessonId > 4) return
+const validateFiles = (changedFilesString: string, lessonOrder: number) => {
+  // 3 is js3 or Objects
+  if (lessonOrder > 3) return
+
+  const fileNameRegex = /(^\d+).js/g // Matches 1.js 2.js 3.js ...etc
 
   const predictValidFile = (e: string) =>
     e.includes('/')
@@ -47,7 +49,6 @@ const validateFiles = (changedFilesString: string, lessonId: number) => {
       : e.match(fileNameRegex)
 
   const changedFilesArray = changedFilesString.trim().split('\n')
-  const fileNameRegex = /(^\d+).js/g // Matches 1.js 2.js 3.js ...etc
 
   // If a single file - [1.js]
   if (changedFilesArray.length === 1 && changedFilesArray[0]) {
@@ -84,7 +85,7 @@ const validateFiles = (changedFilesString: string, lessonId: number) => {
 }
 
 export const getDiffAgainstMaster = async (
-  lessonId: number
+  lessonOrder: number
 ): Promise<DiffObject> => {
   const { current } = await git.branch()
   if (current === 'master') throw new Error(WRONG_BRANCH)
@@ -108,7 +109,7 @@ export const getDiffAgainstMaster = async (
   if (typeof isMasterBranch === 'string') console.log(isMasterBranch)
   if (!isMasterBranch) throw new Error(NOT_MASTER)
 
-  validateFiles(changedFilesString, lessonId)
+  validateFiles(changedFilesString, lessonOrder)
 
   const [display, db] = await Promise.all([
     git.diff([`--color`, `master..${current}`, ...ignoreFileOptions]),

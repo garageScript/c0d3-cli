@@ -21,8 +21,10 @@ const submit = async ({
   try {
     const cliToken = debug ? DEBUG_TOKEN : await getCredentials(url)
     const lessons = await getLessons(url)
-    const { lessonId, challengeId } = await askForChallenges(lessons)
-    const diff = await getDiffAgainstMaster(lessonId)
+    const { lessonId, challengeId, lessonOrder } = await askForChallenges(
+      lessons
+    )
+    const diff = await getDiffAgainstMaster(lessonOrder)
 
     displayBoxUI(DIFF_MSG + diff.display)
     const confirm = await askForConfirmation('The changes are correct?')
