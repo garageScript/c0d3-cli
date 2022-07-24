@@ -40,6 +40,7 @@ describe('c0d3 submit', () => {
     askForChallenges.mockResolvedValue({
       lessonId: 666,
       challengeId: 666,
+      lessonOrder: 666,
     })
 
     askForConfirmation.mockResolvedValue({
@@ -62,6 +63,7 @@ describe('c0d3 submit', () => {
     askForChallenges.mockResolvedValue({
       lessonId: 666,
       challengeId: 666,
+      lessonOrder: 666,
     })
 
     askForConfirmation.mockResolvedValue({
@@ -82,6 +84,7 @@ describe('c0d3 submit', () => {
     askForChallenges.mockResolvedValue({
       lessonId: 666,
       challengeId: 666,
+      lessonOrder: 666,
     })
     expect(await submit(args)).toBe(undefined)
   })
@@ -115,6 +118,7 @@ describe('c0d3 submit', () => {
     askForChallenges.mockResolvedValue({
       lessonId: 666,
       challengeId: 666,
+      lessonOrder: 666,
     })
 
     askForConfirmation.mockResolvedValue({

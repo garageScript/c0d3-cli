@@ -97,9 +97,11 @@ describe('askForChallenges', () => {
       .fn()
       .mockResolvedValueOnce({ lessonOrder: '0' })
       .mockResolvedValueOnce({ challengeOrder: '10' })
+      .mockResolvedValueOnce({ lessonOrder: '10' })
     expect(askForChallenges(lessons)).resolves.toEqual({
       challengeId: 104,
-      lessonId: 5
+      lessonId: 5,
+      lessonOrder: '0'
     })
   })
 
@@ -108,6 +110,7 @@ describe('askForChallenges', () => {
       .fn()
       .mockResolvedValueOnce({ lessonOrder: '0' })
       .mockResolvedValueOnce({ challengeOrder: '10' })
+      .mockResolvedValueOnce({ lessonOrder: '10' })
     await askForChallenges(lessons)
     const invalidLesson = enquirer.prompt.mock.calls[0][0][0].validate(
       'wrongInput'
@@ -117,11 +120,13 @@ describe('askForChallenges', () => {
       'wrongInput'
     )
     const validChallenge = enquirer.prompt.mock.calls[1][0][0].validate(10)
+    const validLessonOrder = enquirer.prompt.mock.calls[1][0][0].validate('10')
 
     expect(invalidLesson).toBe(PROMPT_ORDER)
     expect(validLesson).toBe(true)
     expect(invalidChallenge).toBe(PROMPT_ORDER)
     expect(validChallenge).toBe(true)
+    expect(validLessonOrder).toBe(true)
   })
 })
 

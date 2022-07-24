@@ -26,6 +26,7 @@ export type AskForChallenges = (
 ) => Promise<{
   lessonId: number
   challengeId: number
+  lessonOrder: number
 }>
 
 export type AskForConfirmation = (message: string) => Promise<Question>
