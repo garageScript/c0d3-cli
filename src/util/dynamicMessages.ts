@@ -11,3 +11,18 @@ export const INVALID_SECOND_FILE = (invalidFile?: string): string =>
       }.test.js)`
     } if it is supposed to be a test file, else remove it and submit`
   )
+
+export const WRONG_CHALLENGE_TO_SUBMIT = (
+  selectedChallengeOrder?: string,
+  modifiedChallengeOrder?: string
+): string =>
+  bold.red(
+    `
+The challenge you selected (${selectedChallengeOrder}) to be submitted is not the same as the modified challenge file (${modifiedChallengeOrder}.js)\n
+${bold.blue(
+  `Please either reset the last commit with ${bold.magentaBright(
+    'git reset --soft HEAD~'
+  )} and modify the correct challenge (${selectedChallengeOrder}.js) or select the modified challenge (${modifiedChallengeOrder})`
+)}
+`
+  )
