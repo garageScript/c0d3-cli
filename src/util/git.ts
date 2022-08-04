@@ -6,10 +6,13 @@ import {
   NO_DIFFERENCE,
   WRONG_BRANCH,
   FAILED_GET_LASTCHECKOUT,
-  INVALID_CHALLENGE_FILE,
   SUBMITTING_PLUS_TWO_FILES,
+  INVALID_CHALLENGE_FILE,
 } from '../messages'
-import { INVALID_SECOND_FILE } from './dynamicMessages'
+import {
+  INVALID_SECOND_FILE,
+  WRONG_CHALLENGE_TO_SUBMIT,
+} from './dynamicMessages'
 
 type DiffObject = {
   db: string
@@ -37,24 +40,36 @@ const didCheckoutFromMaster = async () => {
   return splitLastCheckoutMove[0].trim() === 'master'
 }
 
-const validateFiles = (changedFilesString: string, lessonOrder: number) => {
+const predictValidFile = (matchWith: string | RegExp) => (e: string) =>
+  e.includes('/') ? e.split('/')[1].match(matchWith) : e.match(matchWith)
+
+const validateFiles = (
+  changedFilesString: string,
+  lessonOrder: number,
+  selectedChallengeOrder: string
+) => {
   // 3 is js3 or Objects
   if (lessonOrder > 3) return
 
   const fileNameRegex = /(^\d+).js/g // Matches 1.js 2.js 3.js ...etc
-
-  const predictValidFile = (e: string) =>
-    e.includes('/')
-      ? e.split('/')[1].match(fileNameRegex)
-      : e.match(fileNameRegex)
+  const predictCorrectFileName = predictValidFile(fileNameRegex)
 
   const changedFilesArray = changedFilesString.trim().split('\n')
 
   // If a single file - [1.js]
   if (changedFilesArray.length === 1 && changedFilesArray[0]) {
-    const isFileValid = changedFilesArray[0].split('/')[1]?.match(fileNameRegex)
+    const [challengeFile] = changedFilesArray
+    const isFileValid = predictCorrectFileName(challengeFile)
+    const changedFileOrder = challengeFile.split('.')[0].split('/')[1]
 
     if (!isFileValid) throw new Error(INVALID_CHALLENGE_FILE)
+
+    // If the challenge to submit is not equal to the modified challenge file
+    if (selectedChallengeOrder !== changedFileOrder) {
+      throw new Error(
+        WRONG_CHALLENGE_TO_SUBMIT(selectedChallengeOrder, changedFileOrder)
+      )
+    }
 
     return
   }
@@ -63,7 +78,7 @@ const validateFiles = (changedFilesString: string, lessonOrder: number) => {
   if (changedFilesArray.length > 2) throw new Error(SUBMITTING_PLUS_TWO_FILES)
 
   // If 2 files - [1.js, 1.test.js] || [1.js, 2.js]
-  const challengeFiles = changedFilesArray.filter(predictValidFile)
+  const challengeFiles = changedFilesArray.filter(predictCorrectFileName)
 
   // If no challenge files
   if (!challengeFiles.length) {
@@ -79,13 +94,16 @@ const validateFiles = (changedFilesString: string, lessonOrder: number) => {
 
   // If 2nd file is not a test file
   if (!testFile) {
-    const invalidFile = changedFilesArray.find((e) => !predictValidFile(e))
+    const invalidFile = changedFilesArray.find(
+      (e) => !predictCorrectFileName(e)
+    )
     throw new Error(INVALID_SECOND_FILE(invalidFile))
   }
 }
 
 export const getDiffAgainstMaster = async (
-  lessonOrder: number
+  lessonOrder: number,
+  challengeOrder: number
 ): Promise<DiffObject> => {
   const { current } = await git.branch()
   if (current === 'master') throw new Error(WRONG_BRANCH)
@@ -109,7 +127,7 @@ export const getDiffAgainstMaster = async (
   if (typeof isMasterBranch === 'string') console.log(isMasterBranch)
   if (!isMasterBranch) throw new Error(NOT_MASTER)
 
-  validateFiles(changedFilesString, lessonOrder)
+  validateFiles(changedFilesString, lessonOrder, challengeOrder.toString())
 
   const [display, db] = await Promise.all([
     git.diff([`--color`, `master..${current}`, ...ignoreFileOptions]),

@@ -81,6 +81,7 @@ export const askForChallenges: AskForChallenges = async (lessons) => {
     lessonId: Number(lessonsByOrder[lessonOrder].id),
     challengeId: Number(challengeByOrder[challengeOrder].id),
     lessonOrder,
+    challengeOrder,
   }
 }
 

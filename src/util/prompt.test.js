@@ -101,7 +101,8 @@ describe('askForChallenges', () => {
     expect(askForChallenges(lessons)).resolves.toEqual({
       challengeId: 104,
       lessonId: 5,
-      lessonOrder: '0'
+      lessonOrder: '0',
+      challengeOrder: "10"
     })
   })
 
