@@ -6,12 +6,12 @@ import {
   NO_DIFFERENCE,
   WRONG_BRANCH,
   FAILED_GET_LASTCHECKOUT,
-  SUBMITTING_PLUS_TWO_FILES,
   INVALID_CHALLENGE_FILE,
 } from '../messages'
 import {
   INVALID_SECOND_FILE,
   WRONG_CHALLENGE_TO_SUBMIT,
+  SUBMITTING_PLUS_TWO_FILES,
 } from './dynamicMessages'
 
 type DiffObject = {
@@ -75,7 +75,8 @@ const validateFiles = (
   }
 
   // If more than 2 files - [1.js, 2.js, 2.test.js]
-  if (changedFilesArray.length > 2) throw new Error(SUBMITTING_PLUS_TWO_FILES)
+  if (changedFilesArray.length > 2)
+    throw new Error(SUBMITTING_PLUS_TWO_FILES(changedFilesArray))
 
   // If 2 files - [1.js, 1.test.js] || [1.js, 2.js]
   const challengeFiles = changedFilesArray.filter(predictCorrectFileName)
@@ -87,7 +88,7 @@ const validateFiles = (
 
   // If more than one challenge
   if (challengeFiles.length > 1) {
-    throw new Error(SUBMITTING_PLUS_TWO_FILES)
+    throw new Error(SUBMITTING_PLUS_TWO_FILES(changedFilesArray))
   }
 
   const testFile = changedFilesArray.find((e) => e.includes('test'))
