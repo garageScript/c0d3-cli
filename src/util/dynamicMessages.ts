@@ -26,3 +26,21 @@ ${bold.blue(
 )}
 `
   )
+
+export const SUBMITTING_PLUS_TWO_FILES = (files: string[]): string =>
+  bold.red(`
+More than 2 files are being submitted. Please make sure there is no branching issues. 
+
+The files:
+
+${files.reduce((acc, file) => `${acc}- ${file}\n`, '')}
+
+${bold.cyan('If there is, you can solve it by following the links below:')}
+${bold.magenta(`
+- https://www.c0d3.com/docs/setup#reusing-your-branches
+- https://github.com/garageScript/c0d3-cli/wiki/Students-issues#checked-out-from-a-branch-other-than-master`)}
+
+${bold.magenta(
+  `If the links above didn't help, please reach on Discord (https://discord.gg/MJ4PS4dK6J)!`
+)}
+`)
