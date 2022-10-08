@@ -27,7 +27,7 @@ please either create an issue on ${bold.magenta(
 )}\n`
 
 export const INVALID_CHALLENGE_FILE = bold.red(
-  'A valid challenge file could not be found. Make sure the file is not renamed and it has the following format: 1.js, 2.js, 3.js, ...etc\n'
+  'A valid challenge file could not be found. Make sure the file is not renamed and it has the following format: 1.js, 2.js, 3.js, 10.html (only for JS3 challenge 10) ...etc\n'
 )
 
 export const PROMPT_ORDER = bold.red(`The number needs to be a non-negative integer.
