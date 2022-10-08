@@ -9,10 +9,7 @@ export const INVALID_SECOND_FILE = (invalidFile?: string): string =>
       `(${
         invalidFile.includes('.') ? invalidFile.split('.')[0] : invalidFile
       }.test.js)`
-    } if it is supposed to be a test file.
-
-    If it's supposed to be the HTML script file, please include it in the HTML file.
-    `
+    } if it is supposed to be a test file.\nIf it's supposed to be the HTML script file, please include it in the HTML file.`
   )
 
 export const WRONG_CHALLENGE_TO_SUBMIT = (
