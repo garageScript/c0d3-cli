@@ -77,7 +77,7 @@ jest.mock('simple-git/promise', () =>
         .mockResolvedValueOnce('\njs3/1.html')
         .mockResolvedValueOnce('\njs3/1.html')
         .mockResolvedValueOnce('\njs3/1.html')
-        // Should not submit if invalid html file
+        // Should continue if not valid html file
         .mockResolvedValueOnce('\njs3/1.mdx')
         .mockResolvedValueOnce('\njs3/1.mdx')
         .mockResolvedValueOnce('\njs3/1.mdx'),
