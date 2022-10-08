@@ -45,14 +45,16 @@ const predictValidFile = (matchWith: string | RegExp) => (e: string) =>
 
 const validateFiles = (
   changedFilesString: string,
-  lessonOrder: number,
+  lessonOrder: string,
   selectedChallengeOrder: string
 ) => {
   // 3 is js3 or Objects
-  if (lessonOrder > 3) return
+  if (+lessonOrder > 3) return
 
   const fileNameRegex = /(^\d+).js/g // Matches 1.js 2.js 3.js ...etc
+  const fileNameWithHtmlRegex = /(.+).html/g // Matches *.html
   const predictCorrectFileName = predictValidFile(fileNameRegex)
+  const predictCorrectFileNameWithHtml = predictValidFile(fileNameWithHtmlRegex)
 
   const changedFilesArray = changedFilesString.trim().split('\n')
 
@@ -61,6 +63,12 @@ const validateFiles = (
     const [challengeFile] = changedFilesArray
     const isFileValid = predictCorrectFileName(challengeFile)
     const changedFileOrder = challengeFile.split('.')[0].split('/')[1]
+
+    if (+lessonOrder === 3) {
+      const validHtmlFile = predictCorrectFileNameWithHtml(challengeFile)
+
+      if (validHtmlFile) return
+    }
 
     if (!isFileValid) throw new Error(INVALID_CHALLENGE_FILE)
 
@@ -103,7 +111,7 @@ const validateFiles = (
 }
 
 export const getDiffAgainstMaster = async (
-  lessonOrder: number,
+  lessonOrder: string,
   challengeOrder: number
 ): Promise<DiffObject> => {
   const { current } = await git.branch()

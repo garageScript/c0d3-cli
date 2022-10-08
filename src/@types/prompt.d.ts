@@ -26,7 +26,7 @@ export type AskForChallenges = (
 ) => Promise<{
   lessonId: number
   challengeId: number
-  lessonOrder: number
+  lessonOrder: string
   challengeOrder: number
 }>
 

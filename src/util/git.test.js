@@ -7,7 +7,10 @@ import {
   INVALID_CHALLENGE_FILE,
   SUBMITTING_PLUS_TWO_FILES,
 } from '../messages'
-import { INVALID_SECOND_FILE, WRONG_CHALLENGE_TO_SUBMIT } from './dynamicMessages'
+import {
+  INVALID_SECOND_FILE,
+  WRONG_CHALLENGE_TO_SUBMIT,
+} from './dynamicMessages'
 
 jest.mock('simple-git/promise', () =>
   jest.fn(() => {
@@ -16,6 +19,7 @@ jest.mock('simple-git/promise', () =>
         .fn()
         .mockResolvedValueOnce({ current: 'notMaster' })
         .mockResolvedValueOnce({ current: 'master' })
+        .mockResolvedValueOnce({ current: 'notMaster' })
         .mockResolvedValueOnce({ current: 'notMaster' })
         .mockResolvedValueOnce({ current: 'notMaster' })
         .mockResolvedValueOnce({ current: 'notMaster' })
@@ -68,18 +72,30 @@ jest.mock('simple-git/promise', () =>
         // Should not throw error: INVALID_CHALLENGE_FILE on wrong file
         .mockResolvedValueOnce('\njs0/1.js')
         .mockResolvedValueOnce('\njs0/1.js')
-        .mockResolvedValueOnce('\njs0/1.js'),
+        .mockResolvedValueOnce('\njs0/1.js')
+        // Should submit if html file and lesson is JS3
+        .mockResolvedValueOnce('\njs3/1.html')
+        .mockResolvedValueOnce('\njs3/1.html')
+        .mockResolvedValueOnce('\njs3/1.html')
+        // Should continue if not valid html file
+        .mockResolvedValueOnce('\njs3/1.mdx')
+        .mockResolvedValueOnce('\njs3/1.mdx')
+        .mockResolvedValueOnce('\njs3/1.mdx'),
 
       raw: jest
         .fn()
-        .mockResolvedValueOnce(`
+        .mockResolvedValueOnce(
+          `
         7abfefd HEAD@{0}: checkout: moving from master to branch2
         7abfefd HEAD@{1}: checkout: moving from branch2 to master
-        `)
-        .mockResolvedValueOnce(`
+        `
+        )
+        .mockResolvedValueOnce(
+          `
         7abfefd HEAD@{0}: checkout: moving from branch3 to branch2
         7abfefd HEAD@{1}: checkout: moving from branch2 to master
-        `)
+        `
+        )
         .mockResolvedValueOnce(``)
         .mockResolvedValueOnce(``)
         .mockResolvedValueOnce(``)
@@ -90,6 +106,8 @@ jest.mock('simple-git/promise', () =>
         .mockResolvedValueOnce(``)
         .mockResolvedValueOnce(``)
         .mockResolvedValueOnce(``)
+        .mockResolvedValueOnce(``)
+        .mockResolvedValueOnce(``),
     }
   })
 )
@@ -125,7 +143,7 @@ describe('getDiffAgainstMaster', () => {
   test('Should log: FAILED_GET_LASTCHECKOUT', (done) => {
     expect.assertions(1)
 
-    const consoleSpy = jest.spyOn(console, 'log');
+    const consoleSpy = jest.spyOn(console, 'log')
 
     // Assertions become 2 if used await
     getDiffAgainstMaster(5, 1).then(() => {
@@ -139,19 +157,25 @@ describe('getDiffAgainstMaster', () => {
   test('Should throw error: SUBMITTING_PLUS_TWO_FILES', () => {
     expect.assertions(1)
 
-    return expect(getDiffAgainstMaster(2, 1)).rejects.toThrow(SUBMITTING_PLUS_TWO_FILES)
+    return expect(getDiffAgainstMaster(2, 1)).rejects.toThrow(
+      SUBMITTING_PLUS_TWO_FILES
+    )
   })
 
   test('Should throw error: INVALID_CHALLENGE_FILE for no challenge files', () => {
     expect.assertions(1)
 
-    return expect(getDiffAgainstMaster(2, 1)).rejects.toThrow(INVALID_CHALLENGE_FILE)
+    return expect(getDiffAgainstMaster(2, 1)).rejects.toThrow(
+      INVALID_CHALLENGE_FILE
+    )
   })
 
   test('Should throw error: SUBMITTING_PLUS_TWO_FILES for submitting +2 challenges', () => {
     expect.assertions(1)
 
-    return expect(getDiffAgainstMaster(2, 1)).rejects.toThrow(SUBMITTING_PLUS_TWO_FILES)
+    return expect(getDiffAgainstMaster(2, 1)).rejects.toThrow(
+      SUBMITTING_PLUS_TWO_FILES
+    )
   })
 
   test('Should throw error: INVALID_SECOND_FILE', () => {
@@ -167,8 +191,8 @@ describe('getDiffAgainstMaster', () => {
     expect.assertions(1)
 
     return expect(getDiffAgainstMaster(2, 1)).resolves.toStrictEqual({
-      db: "\njs0/1.js\njs0/1.test.js",
-      display: "\njs0/1.js\njs0/1.test.js",
+      db: '\njs0/1.js\njs0/1.test.js',
+      display: '\njs0/1.js\njs0/1.test.js',
     })
   })
 
@@ -184,15 +208,34 @@ describe('getDiffAgainstMaster', () => {
   test('Should throw error: INVALID_CHALLENGE_FILE on wrong file', () => {
     expect.assertions(1)
 
-    return expect(getDiffAgainstMaster(2, 1)).rejects.toThrow(INVALID_CHALLENGE_FILE)
+    return expect(getDiffAgainstMaster(2, 1)).rejects.toThrow(
+      INVALID_CHALLENGE_FILE
+    )
   })
 
   test('Should not throw error: INVALID_CHALLENGE_FILE on wrong file', () => {
     expect.assertions(1)
 
     return expect(getDiffAgainstMaster(2, 1)).resolves.toStrictEqual({
-      db: "\njs0/1.js",
-      display: "\njs0/1.js",
+      db: '\njs0/1.js',
+      display: '\njs0/1.js',
     })
+  })
+
+  test('Should submit if html file and lesson is JS3', () => {
+    expect.assertions(1)
+
+    return expect(getDiffAgainstMaster(3, 10)).resolves.toStrictEqual({
+      db: '\njs3/1.html',
+      display: '\njs3/1.html',
+    })
+  })
+
+  test('Should continue if not valid html file', () => {
+    expect.assertions(1)
+
+    return expect(getDiffAgainstMaster(3, 10)).rejects.toThrow(
+      INVALID_CHALLENGE_FILE
+    )
   })
 })
