@@ -42,7 +42,7 @@ export const getOptionDisplayStr: GetOptionDisplayStr = (array) => {
 export const askForChallenges: AskForChallenges = async (lessons) => {
   const lessonsByOrder = getMapFromOptions(lessons)
   displayBoxUI(getOptionDisplayStr(lessons).trimEnd())
-  const { lessonOrder }: { lessonOrder: number } = await prompt([
+  const { lessonOrder }: { lessonOrder: string } = await prompt([
     {
       type: 'input',
       name: 'lessonOrder',
