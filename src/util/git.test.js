@@ -31,6 +31,7 @@ jest.mock('simple-git/promise', () =>
         .mockResolvedValueOnce({ current: 'notMaster' })
         .mockResolvedValueOnce({ current: 'notMaster' })
         .mockResolvedValueOnce({ current: 'notMaster' })
+        .mockResolvedValueOnce({ current: 'notMaster' })
         .mockResolvedValueOnce({ current: 'notMaster' }),
 
       diff: jest
@@ -79,8 +80,10 @@ jest.mock('simple-git/promise', () =>
         .mockResolvedValueOnce('\njs3/1.html')
         // Should continue if not valid html file
         .mockResolvedValueOnce('\njs3/1.mdx')
-        .mockResolvedValueOnce('\njs3/1.mdx')
-        .mockResolvedValueOnce('\njs3/1.mdx'),
+        // Should submit with 2nd file as html for js3
+        .mockResolvedValueOnce('\njs3/10.js\njs3/10.html')
+        .mockResolvedValueOnce('\njs3/10.js\njs3/10.html')
+        .mockResolvedValueOnce('\njs3/10.js\njs3/10.html'),
 
       raw: jest
         .fn()
@@ -96,6 +99,7 @@ jest.mock('simple-git/promise', () =>
         7abfefd HEAD@{1}: checkout: moving from branch2 to master
         `
         )
+        .mockResolvedValueOnce(``)
         .mockResolvedValueOnce(``)
         .mockResolvedValueOnce(``)
         .mockResolvedValueOnce(``)
@@ -237,5 +241,14 @@ describe('getDiffAgainstMaster', () => {
     return expect(getDiffAgainstMaster(3, 10)).rejects.toThrow(
       INVALID_CHALLENGE_FILE
     )
+  })
+
+  test('Should submit with 2nd file as html for js3', () => {
+    expect.assertions(1)
+
+    return expect(getDiffAgainstMaster(3, 10)).resolves.toStrictEqual({
+      db: '\njs3/10.js\njs3/10.html',
+      display: '\njs3/10.js\njs3/10.html',
+    })
   })
 })

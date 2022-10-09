@@ -103,6 +103,15 @@ const validateFiles = (
 
   // If 2nd file is not a test file
   if (!testFile) {
+    const is2ndFileHtml = changedFilesArray.find((e) =>
+      predictCorrectFileNameWithHtml(e)
+    )
+
+    // If lesson is JS3 and 2nd file is HTML
+    if (+lessonOrder === 3 && is2ndFileHtml) {
+      return
+    }
+
     const invalidFile = changedFilesArray.find(
       (e) => !predictCorrectFileName(e)
     )
