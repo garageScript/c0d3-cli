@@ -134,6 +134,7 @@ export const getDiffAgainstMaster = async (
 
   const changedFilesString = await git.diff([
     `master..${current}`,
+    '--diff-filter=d',
     '--name-only',
     ...ignoreFileOptions,
   ])
@@ -149,7 +150,7 @@ export const getDiffAgainstMaster = async (
 
   const [display, db] = await Promise.all([
     git.diff([`--color`, `master..${current}`, ...ignoreFileOptions]),
-    git.diff([`master..${current}`, ...ignoreFileOptions]),
+    git.diff([`master..${current}`, '--diff-filter=d', ...ignoreFileOptions]),
   ])
 
   return {
